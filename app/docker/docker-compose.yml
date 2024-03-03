@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  database:
+    container_name: mysqlda
+    build:
+      context: ./database
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=${DATABASE_NAME}
+      - MYSQL_USER=${DATABASE_USER}
+      - MYSQL_PASSWORD=${DATABASE_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
+      - TZ=Europe/Warsaw
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/data:/var/lib/mysql
+      - ./database/config:/etc/mysql/conf.d
+
+  phpmyadmin:
+    container_name: pmada
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: database
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 2G
+    depends_on:
+      - database
+    ports:
+      - "8080:80"
+
+  apache2:
+    container_name: apacheda
+    build:
+      context: ./php-apache
+    depends_on:
+      - database
+    restart: unless-stopped
+    volumes:
+      - ../www:/var/www/html
+      # - ./php.ini:/usr/local/etc/php/php.ini
+    ports:
+      - "80:80"
+      - "443:443"

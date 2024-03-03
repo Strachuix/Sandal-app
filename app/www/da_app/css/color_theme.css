@@ -1,0 +1,96 @@
+body {
+  background-color: #fcf3cc;
+}
+.bg-black {
+  background-color: #030202;
+}
+.bg-gray {
+  background-color: #807a79;
+}
+.bg-orange {
+  background-color: #f9a619;
+}
+.bg-light-orange {
+  background-color: #ffe590;
+}
+.bg-white-orange {
+  background-color: #fcf3cc;
+}
+.txt-black {
+  color: #030202;
+}
+.txt-gray {
+  color: #807a79;
+}
+.txt-orange {
+  color: #f9a619;
+}
+.txt-light-orange {
+  color: #ffe590;
+}
+.txt-white-orange {
+  color: #fcf3cc;
+}
+.border-black {
+  border-color: #030202;
+}
+.border-gray {
+  border-color: #807a79;
+}
+.border-orange {
+  border-color: #f9a619;
+}
+.border-light-orange {
+  border-color: #ffe590;
+}
+.border-white-orange {
+  border-color: #fcf3cc;
+}
+.form-control {
+  background-color: #fcf3cc;
+  border-color: #807a79;
+  color: #030202;
+}
+.btn-primary {
+  background-color: #f9a619;
+  color: #fcf3cc;
+  border-color: #f9a619;
+}
+.btn-primary:hover {
+  background-color: #ffa200;
+  color: #fffefd;
+  border-color: #813800;
+}
+a {
+  color: #fcf3cc;
+}
+a:hover {
+  color: #fcf3cc;
+}
+.custom-toggler .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0, 128, 0, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+table,
+th,
+tr,
+tbody,
+thead,
+td {
+  border: #030202 solid 1px;
+  background-color: #ffa200;
+  width: 100%;
+}
+.weekdays-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.card-body-icon-container {
+  font-size: 5rem !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
