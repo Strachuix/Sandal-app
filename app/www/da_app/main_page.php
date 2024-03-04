@@ -1,10 +1,5 @@
-<style>
-  #day_name{
-    overflow: hidden;
-  }
-</style>
 <div class="container" id="big">
-  <div class="row p-4 col-12">
+  <div class="row p-4">
     <div class="col-md-6 mb-5">
       <div class="card bg-light-orange" style="cursor:pointer; min-height:200px" id="my_groups">
         <div class="card-body-icon-container card-body">
@@ -55,23 +50,45 @@
 </div>
 
 <script>
-  var calendarDate = new Date();
   var currentDate = new Date();
+  var calendarDate = currentDate;
 
   function loadMeetings(date = null) {
     if (date == null) {
-      var day = currentDate.getDate();
-      var month = currentDate.getMonth() + 1;
-      var year = currentDate.getFullYear();
-      var date = (day < 10 ? '0' : '') + day + '-' + (month < 10 ? '0' : '') + month + '-' + year;
-    } else {
-
+      date = currentDate;
     }
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    date = (day < 10 ? '0' : '') + day + '-' + (month < 10 ? '0' : '') + month + '-' + year;
     $.post('/ajax/ajax.php', {
       day: date,
       action: 'load_meetings'
     }, function(data) {
-      $("#meetings_calendar").empty().append(data);
+      let html = ``;
+      data = JSON.parse(data);
+      console.log(data);
+      $.each(data, function(key, value) {
+        let group_name = value.group_name;
+        let id = value.id;
+        let date = value.date;
+        let group_id = value.group_id;
+        let time = value.time;
+        let meet = `
+          <div class="col-xl-12 mb-3">
+            <div class="card bg-orange group-meeting" style="cursor:pointer;" meeting_id="${id}" group_id="${group_id}">
+              <div class="card-body p-3">
+                <div class="d-flex flex-row justify-content-between">
+                  <h5 class="card-title m-0">${group_name}</h5>
+                  <small>${time}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        html += meet;
+      })
+      $("#meetings_calendar").empty().append(html);
     })
   }
 
@@ -84,6 +101,15 @@
     })
   }
 
+  function joinGroup(group_id){
+    $.post('/ajax/ajax.php', {
+      group_id: group_id,
+      action: 'join_group'
+    }, function(data) {
+      console.log(data);
+    })
+  }
+
   
   function calendarChangeDay(date){
     var daysOfWeek = ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'];
@@ -92,10 +118,12 @@
     if ($.inArray(prevday,daysOfWeek) < $.inArray(day,daysOfWeek)) {
       $("#day_name").hide("slide", { direction: "left" }, 500, function(){
         $("#day_name").html(day);
+        loadMeetings(date);
       }).show("slide", { direction: "right" }, 500);
     }else{
       $("#day_name").hide("slide", { direction: "right" }, 500, function(){
         $("#day_name").html(day);
+        loadMeetings(date);
       }).show("slide", { direction: "left" }, 500);
     }
   }
@@ -123,5 +151,11 @@
   $(document).on("click", "#my_groups", function() {
     console.log("admin panel clicked");
     location.href = "./index.php?nav=my_groups";
+  });
+
+  $(document).on("click", ".group-meeting", function() {
+    let meeting_id = $(this).attr("meeting_id");
+    let group_id = $(this).attr("group_id");
+    location.href = "./index.php?nav=meeting_details&meeting_id="+meeting_id+"&group_id="+group_id;
   });
 </script>

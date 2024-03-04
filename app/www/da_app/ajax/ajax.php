@@ -24,23 +24,14 @@
 
         switch($action){
             case 'load_meetings':
-                $out = '';
                 $meetings = $User->getMeetings();
-                foreach ($meetings as $meeting) {
-                  $out .='
-                    <div class="col-xl-12">
-                      <div class="card bg-orange" style="cursor:pointer;" group_id="' . $meeting['group_id'] . '">
-                        <div class="card-body p-3">
-                          <div class="d-flex flex-row justify-content-between">
-                            <h5 class="card-title m-0">' . $meeting['group_name'] . '</h5>
-                            <small>' . $meeting['time'] . '</small>
-                          </div>
-                        </div>
-                      </div>
-                    </div>';
-                }
+                $out = json_encode($meetings);
                 echo $out;
                 break;
+            case 'join_group':
+                $group_id = $_POST['group_id'];
+                $result = $User->joinGroup($group_id);
+                return $result;
         }
     }else{
         return false;
