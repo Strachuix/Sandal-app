@@ -1,3 +1,8 @@
+<style>
+  #day_name{
+    overflow: hidden;
+  }
+</style>
 <div class="container" id="big">
   <div class="row p-4 col-12">
     <div class="col-md-6 mb-5">
@@ -18,16 +23,15 @@
         </div>
       </div>
     </div>
-    <?php if ($User->role == "ADMIN") { ?>
-      <div class="col-md-6 mb-5">
-        <div class="card bg-light-orange" style="min-height:200px" id="calendar">
-          <div class="card-body">
+    <div class="col-md-6 mb-5">
+      <div class="card bg-light-orange" style="min-height:200px" id="calendar">
+        <div class="card-body">
             <h4 class="card-title">Kalendarz</h4>
             <div class="container mt-4">
               <div class="d-flex flex-row justify-content-around align-items-center">
                 <i class="fa-solid fa-arrow-left text-lg"></i>
                 <div class="text-center">
-                  <h5>Poniedziałek</h5>
+                  <h5 id="day_name"></h5>
                 </div>
                 <i class="fa-solid fa-arrow-right text-lg"></i>
               </div>
@@ -37,6 +41,7 @@
           </div>
         </div>
       </div>
+    <?php if ($User->role == "ADMIN") { ?>
       <div class="col-md-6 mb-5">
         <div class="card bg-light-orange" style="cursor:pointer; min-height:200px" id="admin_panel">
           <div class="card-body-icon-container card-body">
@@ -50,9 +55,11 @@
 </div>
 
 <script>
+  var calendarDate = new Date();
+  var currentDate = new Date();
+
   function loadMeetings(date = null) {
     if (date == null) {
-      currentDate = new Date();
       var day = currentDate.getDate();
       var month = currentDate.getMonth() + 1;
       var year = currentDate.getFullYear();
@@ -77,8 +84,35 @@
     })
   }
 
+  
+  function calendarChangeDay(date){
+    var daysOfWeek = ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'];
+    let day = daysOfWeek[date.getDay()];
+    let prevday =  $("#day_name").html();
+    if ($.inArray(prevday,daysOfWeek) < $.inArray(day,daysOfWeek)) {
+      $("#day_name").hide("slide", { direction: "left" }, 500, function(){
+        $("#day_name").html(day);
+      }).show("slide", { direction: "right" }, 500);
+    }else{
+      $("#day_name").hide("slide", { direction: "right" }, 500, function(){
+        $("#day_name").html(day);
+      }).show("slide", { direction: "left" }, 500);
+    }
+  }
+  
+  $('.fa-arrow-left').click(function() {
+    calendarDate.setDate(calendarDate.getDate() - 1);
+    calendarChangeDay(calendarDate);
+  });
+
+  $('.fa-arrow-right').click(function() {
+    calendarDate.setDate(calendarDate.getDate() + 1);
+    calendarChangeDay(calendarDate);
+  });
+
   $(document).ready(function() {
     loadMeetings();
+    calendarChangeDay(currentDate);
   })
 
   $(document).on("click", "#admin_panel", function() {

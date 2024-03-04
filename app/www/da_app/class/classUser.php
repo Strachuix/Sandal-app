@@ -190,9 +190,10 @@ class User
                 `groups_members`
             LEFT JOIN `groups` ON `groups`.`id` = `groups_members`.`group_id`
             WHERE
-                `user_id` = 1 AND `active` = 1
+                `user_id` = ".$this->id." AND `active` = 1
             ORDER BY
                 `groups_members`.`join_date`";
+                // echo $sql;
         //get all groups data
         $res = mysqli_query($GLOBALS['connect'], $sql);
         if (mysqli_num_rows($res) > 0) {

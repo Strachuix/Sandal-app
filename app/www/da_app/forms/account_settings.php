@@ -1,8 +1,4 @@
-<?php
 
-    // $User = new User($_SESSION['user']);
-
-?>
 <link href="../system/css/select2.min.css" rel="stylesheet"/>
 <style>
     #signup_allergy_missing, #signup_diet_missing{

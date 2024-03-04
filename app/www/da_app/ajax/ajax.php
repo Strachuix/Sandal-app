@@ -1,6 +1,7 @@
 <?php
     require './../db_connect.php';
     require './../class/classUser.php';
+    session_start();
 
     if (isset($_SESSION['user'])) {
         $User = unserialize($_SESSION['user']);
