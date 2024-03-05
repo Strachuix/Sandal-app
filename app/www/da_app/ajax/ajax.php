@@ -31,7 +31,9 @@
             case 'join_group':
                 $group_id = $_POST['group_id'];
                 $result = $User->joinGroup($group_id);
-                return $result;
+                echo $result;
+            case 'show_groups':
+                echo json_encode($User->getGroups());
         }
     }else{
         return false;

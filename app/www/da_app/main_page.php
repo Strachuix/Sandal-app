@@ -67,7 +67,6 @@
     }, function(data) {
       let html = ``;
       data = JSON.parse(data);
-      console.log(data);
       $.each(data, function(key, value) {
         let group_name = value.group_name;
         let id = value.id;
@@ -111,35 +110,28 @@
   }
 
   
-  function calendarChangeDay(date){
+  function calendarChangeDay(date, direction = 'right'){
     var daysOfWeek = ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'];
     let day = daysOfWeek[date.getDay()];
-    let prevday =  $("#day_name").html();
-    if ($.inArray(prevday,daysOfWeek) < $.inArray(day,daysOfWeek)) {
-      $("#day_name").hide("slide", { direction: "left" }, 500, function(){
-        $("#day_name").html(day);
-        loadMeetings(date);
-      }).show("slide", { direction: "right" }, 500);
-    }else{
-      $("#day_name").hide("slide", { direction: "right" }, 500, function(){
-        $("#day_name").html(day);
-        loadMeetings(date);
-      }).show("slide", { direction: "left" }, 500);
-    }
+    let prevday = $("#day_name").html();
+    let op_direcion = direction=='right'?'left':'right';
+    $("#day_name").hide("slide", { direction: op_direcion }, 500, function(){
+      $("#day_name").html(day);
+      loadMeetings(date);
+    }).show("slide", { direction: direction }, 500);
   }
   
   $('.fa-arrow-left').click(function() {
     calendarDate.setDate(calendarDate.getDate() - 1);
-    calendarChangeDay(calendarDate);
+    calendarChangeDay(calendarDate, 'left');
   });
 
   $('.fa-arrow-right').click(function() {
     calendarDate.setDate(calendarDate.getDate() + 1);
-    calendarChangeDay(calendarDate);
+    calendarChangeDay(calendarDate, 'right');
   });
 
   $(document).ready(function() {
-    loadMeetings();
     calendarChangeDay(currentDate);
   })
 
