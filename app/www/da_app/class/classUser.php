@@ -212,7 +212,7 @@ class User
         }
     }
 
-    public function getMeetings($timestamp = null)
+    public function getMeetings($date = null)
     {
         $groups = $this->getGroups();
         if ($groups == false) {
@@ -233,8 +233,8 @@ class User
             }
 
             $where = '';
-            if ($timestamp != null) {
-                $where = " AND meetings.date BETWEEN $timestamp AND " . strtotime('+1 day', $timestamp);
+            if ($date != null) {
+                $where = " AND meetings.date BETWEEN '" . date('Y-m-d', strtotime($date)) ." 00:00:00' AND '" . date('Y-m-d', strtotime($date . ' +1 day')) ." 00:00:00'";
             }
             $sql = "SELECT `groups`.`group_name`, `meetings`.`id`, `meetings`.`date`, `meetings`.`group_id` FROM `meetings` LEFT JOIN `groups` ON `groups`.`id` = `meetings`.`group_id` WHERE `meetings`.`group_id` IN ($id_search) $where ORDER BY `meetings`.`date` DESC";
             $res = mysqli_query($GLOBALS['connect'], $sql);

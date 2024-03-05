@@ -53,7 +53,7 @@
   var currentDate = new Date();
   var calendarDate = currentDate;
 
-  function loadMeetings(date = null) {
+  function loadMeetings(date = null, direction = 'right') {
     if (date == null) {
       date = currentDate;
     }
@@ -61,6 +61,7 @@
     var month = date.getMonth() + 1;
     var year = date.getFullYear();
     date = (day < 10 ? '0' : '') + day + '-' + (month < 10 ? '0' : '') + month + '-' + year;
+    let op_direcion = direction=='right'?'left':'right';
     $.post('/ajax/ajax.php', {
       day: date,
       action: 'load_meetings'
@@ -87,7 +88,9 @@
         `;
         html += meet;
       })
-      $("#meetings_calendar").empty().append(html);
+      $("#meetings_calendar").hide("slide", { direction: op_direcion }, 250, function(){
+        $("#meetings_calendar").empty().append(html);
+      }).show("slide", { direction: direction }, 250);
     })
   }
 
@@ -115,10 +118,10 @@
     let day = daysOfWeek[date.getDay()];
     let prevday = $("#day_name").html();
     let op_direcion = direction=='right'?'left':'right';
-    $("#day_name").hide("slide", { direction: op_direcion }, 500, function(){
+    loadMeetings(date, direction);
+    $("#day_name").hide("slide", { direction: op_direcion }, 250, function(){
       $("#day_name").html(day);
-      loadMeetings(date);
-    }).show("slide", { direction: direction }, 500);
+    }).show("slide", { direction: direction }, 250);
   }
   
   $('.fa-arrow-left').click(function() {

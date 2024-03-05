@@ -24,7 +24,8 @@
 
         switch($action){
             case 'load_meetings':
-                $meetings = $User->getMeetings();
+                $day = $_POST['day'];
+                $meetings = $User->getMeetings($day);
                 $out = json_encode($meetings);
                 echo $out;
                 break;
