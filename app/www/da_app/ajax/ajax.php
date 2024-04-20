@@ -33,8 +33,13 @@
                 $group_id = $_POST['group_id'];
                 $result = $User->joinGroup($group_id);
                 echo $result;
+                break;
             case 'show_groups':
                 echo json_encode($User->getGroups());
+                break;
+            case 'show_leadered_groups':
+                echo json_encode($User->getLeaderedGroups());
+                break;
         }
     }else{
         return false;

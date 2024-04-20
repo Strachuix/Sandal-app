@@ -182,15 +182,20 @@ class User
         return $table;
     }
 
-    public function getGroups()
+    public function getGroups($strap = false)
     {
+        if($strap){
+            $where = "`leader_id` = " . $this->id;
+        }else{
+            $where = "`user_id` = " . $this->id . " AND `active` = 1";
+        }
         $sql = "SELECT
                 `groups`.*
             FROM
                 `groups_members`
             LEFT JOIN `groups` ON `groups`.`id` = `groups_members`.`group_id`
             WHERE
-                `user_id` = " . $this->id . " AND `active` = 1
+                $where
             ORDER BY
                 `groups_members`.`join_date`";
         // echo $sql;
@@ -216,7 +221,7 @@ class User
     {
         $groups = $this->getGroups();
         if ($groups == false) {
-            return "No groups to show";
+            return "No meetings to show";
         } else {
             $group_id_array = array();
             $id_search = "";
@@ -234,7 +239,7 @@ class User
 
             $where = '';
             if ($date != null) {
-                $where = " AND meetings.date BETWEEN '" . date('Y-m-d', strtotime($date)) ." 00:00:00' AND '" . date('Y-m-d', strtotime($date . ' +1 day')) ." 00:00:00'";
+                $where = " AND meetings.date BETWEEN '" . date('Y-m-d', strtotime($date)) . " 00:00:00' AND '" . date('Y-m-d', strtotime($date . ' +1 day')) . " 00:00:00'";
             }
             $sql = "SELECT `groups`.`group_name`, `meetings`.`id`, `meetings`.`date`, `meetings`.`group_id` FROM `meetings` LEFT JOIN `groups` ON `groups`.`id` = `meetings`.`group_id` WHERE `meetings`.`group_id` IN ($id_search) $where ORDER BY `meetings`.`date` DESC";
             $res = mysqli_query($GLOBALS['connect'], $sql);
@@ -262,18 +267,18 @@ class User
         $user_id = $user_id == null ? $this->id : $user_id;
         $sql = "SELECT id FROM groups_members WHERE user_id = $user_id AND group_id = $group_id";
         $res = mysqli_query($GLOBALS['connect'], $sql);
-        if(mysqli_num_rows($res) != 0){
+        if (mysqli_num_rows($res) != 0) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
     public function joinGroup($group_id)
     {
-        if($this -> isInGroup($group_id)){
+        if ($this->isInGroup($group_id)) {
             return "Jesteś już w tej grupie";
-        }else{
+        } else {
             $sql = "INSERT INTO `groups_members`(`user_id`, `group_id`) VALUES ('$this->id','$group_id')";
             mysqli_query($GLOBALS['connect'], $sql);
             return "Zostałeś dodany";
@@ -286,5 +291,10 @@ class User
         mysqli_query($GLOBALS['connect'], $sql);
         $last_id = mysqli_insert_id($GLOBALS['connect']);
         $this->joinGroup($last_id);
+    }
+
+    public function getLeaderedGroups()
+    {
+        return $this -> getGroups(true);
     }
 }

@@ -48,6 +48,10 @@ if (!$User->id) {
             require './groups/my_groups.php';
             break;
 
+        case 'strap_panel':
+            require './groups/leadered_groups.php';
+            break;
+
         default:
             require './main_page.php';
             break;
